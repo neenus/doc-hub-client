@@ -28,7 +28,7 @@ function App() {
   return (
     <React.Fragment>
       <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-        <Container sx={{ flex: 1 }}>
+        <Container maxWidth="sm" sx={{ flex: 1 }}>
 
           <RouterProvider sx={{ flex: 1 }} router={router} />
         </Container>
