@@ -27,12 +27,13 @@ const router = createBrowserRouter([
 function App() {
   return (
     <React.Fragment>
-      <Container disableGutters maxWidth="false" sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-        <Box sx={{ flex: 1 }}>
+      <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+        <Container sx={{ flex: 1 }}>
+
           <RouterProvider sx={{ flex: 1 }} router={router} />
-        </Box>
+        </Container>
         <Footer />
-      </Container>
+      </Box>
     </React.Fragment >
   );
 }
