@@ -1,14 +1,21 @@
-import React from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { Box } from '@mui/system'
-import { Typography, Button, InputAdornment } from '@mui/material'
+import { Typography, Button, InputAdornment, Backdrop } from '@mui/material'
 import TextInput from '../components/Input/Input.component'
+import FileList from '../components/FilesList/FilesList.component'
+import CircularProgressWithLabel from "../components/CircularProgressWithLabel/CircularProgressWithLabel.component";
+import axios from 'axios'
 
 const Home = () => {
-  const [description, setDescription] = React.useState('');
-  const [file, setFile] = React.useState([]);
-  const [nameInput, setNameInput] = React.useState('');
-  const [files, setFiles] = React.useState([]);
-  const fileInputRef = React.useRef("");
+  const [description, setDescription] = useState('');
+  const [file, setFile] = useState([]);
+  const [nameInput, setNameInput] = useState('');
+  const [files, setFiles] = useState([]);
+  const fileInputRef = useRef("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const controller = useRef(new AbortController());
 
   const handleChange = e => setDescription(e.target.value);
   const fileSelectHandler = e => {
@@ -16,14 +23,73 @@ const Home = () => {
     setFile(selectedFile);
     setNameInput(selectedFile.name);
   }
-  const AddFileHandler = React.useCallback(() => {
-    setFiles(prevFiles => [...prevFiles, { file, description }]);
+  const AddFileHandler = useCallback(() => {
+    let updatedFile = file;
+    updatedFile.description = description;
+    setFile(updatedFile);
+    setFiles([...files, { description, file }]);
     setNameInput('');
     setDescription('');
     fileInputRef.current.value = "";
     setFile([]);
-    console.log(files);
   }, [file, description, files]);
+
+  const handleClear = useCallback(() => {
+    setNameInput('');
+    setFiles([]);
+  }, []);
+
+  const uploadCancelCb = useCallback(() => {
+    controller.current.abort();
+    setLoading(false);
+    setFiles([]);
+    setUploadProgress(0);
+  }, []);
+
+  const handleUpload = useCallback(async () => {
+    const apiURL = 'http://192.168.64.9:7000/uploads';
+
+    setLoading(true);
+    const formData = new FormData();
+    files.forEach((file, index) => {
+      formData.append(file.file.description, file.file);
+    });
+
+    try {
+      const response = await axios({
+        method: 'POST',
+        url: apiURL,
+        data: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        onUploadProgress: progressEvent => {
+          setUploadProgress(
+            parseInt(
+              Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            )
+          );
+        },
+        signal: controller.current.signal,
+      });
+
+      response.status === 200 && setFiles([]);
+
+    } catch (err) {
+      if (axios.isCancel(err)) {
+        setUploadProgress(0);
+      } else {
+        setError({
+          message: err.message,
+          status: err.response.status
+        })
+      }
+    } finally {
+      setLoading(false);
+      setUploadProgress(0);
+    }
+
+  }, [files]);
 
   return (
     <React.Fragment>
@@ -36,7 +102,7 @@ const Home = () => {
           Select a file and enter description to upload
         </Typography>
         <TextInput label='Description' value={description} handleChange={handleChange} />
-        <TextInput fullWidth
+        <TextInput
           label={nameInput ? "Selected File" : "Select a File"}
           variant="outlined"
           value={nameInput}
@@ -54,13 +120,30 @@ const Home = () => {
           fullWidth
           variant="contained"
           color="primary"
-          sx={{ width: "50%", mt: 2 }}
+          sx={{ mt: 2 }}
           onClick={AddFileHandler}>
           Add File
         </Button>
       </Box>
+
+      {files.length > 0 &&
+        <React.Fragment>
+          <FileList files={files} />
+          <Button disabled={files.length === 0} variant="contained" color="primary" sx={{ my: 2, mr: 2 }} onClick={handleClear}> Clear </Button>
+          <Button disabled={files.length === 0} variant="contained" color="primary" sx={{ my: 2, mr: 2 }} onClick={handleUpload}> Upload </Button>
+        </React.Fragment>
+      }
+
+      {loading &&
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgressWithLabel progress={uploadProgress} onCancel={uploadCancelCb} />
+        </Backdrop>
+      }
     </React.Fragment>
   )
 }
 
-export default Home
+export default Home;
