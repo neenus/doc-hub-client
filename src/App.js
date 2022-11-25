@@ -3,7 +3,6 @@ import './App.css';
 import {
   createBrowserRouter,
   RouterProvider,
-  Route,
 } from "react-router-dom";
 import Home from "./Routes/Home";
 import About from "./Routes/About";

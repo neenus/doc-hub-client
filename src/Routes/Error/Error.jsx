@@ -1,10 +1,5 @@
 import React from "react";
 import { useRouteError } from "react-router-dom";
-import { ErrorOutline } from '@mui/icons-material';
-import Typography from '@mui/material/Typography';
-// import { Container } from "@mui/system";
-import { Box } from "@mui/material";
-import { red } from "@mui/material/colors";
 
 import "./Error.css";
 
