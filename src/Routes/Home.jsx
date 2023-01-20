@@ -4,6 +4,7 @@ import { Typography, Button, InputAdornment, Backdrop } from '@mui/material'
 import TextInput from '../components/Input/Input.component'
 import FileList from '../components/FilesList/FilesList.component'
 import CircularProgressWithLabel from "../components/CircularProgressWithLabel/CircularProgressWithLabel.component";
+import SnackbarComponent from '../components/Snackbar/Snackbar.component'
 import axios from 'axios'
 
 const Home = () => {
@@ -16,7 +17,17 @@ const Home = () => {
   const [error, setError] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const controller = useRef(new AbortController());
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSnackbarOpen(false);
+  }
   const handleChange = e => setDescription(e.target.value);
   const fileSelectHandler = e => {
     let selectedFile = e.target.files[0];
@@ -47,7 +58,7 @@ const Home = () => {
   }, []);
 
   const handleUpload = useCallback(async () => {
-    const apiURL = 'http://192.168.64.9:7000/uploads';
+    const apiURL = `${process.env.REACT_APP_API_BASE_URL}/upload`;
 
     setLoading(true);
     const formData = new FormData();
@@ -73,27 +84,36 @@ const Home = () => {
         signal: controller.current.signal,
       });
 
-      response.status === 200 && setFiles([]);
+      if (response.status === 200) {
+        setSnackbarOpen(true);
+        setSnackbarMessage(response.data.message);
+        setSnackbarSeverity('success');
+        setFiles([]);
+      }
 
     } catch (err) {
       if (axios.isCancel(err)) {
+        setSnackbarOpen(true);
+        setSnackbarMessage('Upload cancelled');
+        setSnackbarSeverity('info');
         setUploadProgress(0);
       } else {
-        setError({
-          message: err.message,
-          status: err.response.status
-        })
+        setError({ error: true, message: err.response.data.message })
+        setSnackbarOpen(true);
+        setSnackbarMessage(error.message);
+        setSnackbarSeverity('error');
       }
     } finally {
       setLoading(false);
       setUploadProgress(0);
     }
 
-  }, [files]);
+  }, [files, error]);
 
   return (
     <React.Fragment>
       <Box py={10} sx={{ textAlign: "center" }}>
+        <SnackbarComponent open={snackbarOpen} handleClose={handleClose} message={snackbarMessage} severity={snackbarSeverity} />
         <Typography variant="h5" gutterBottom sx={{ color: "#0B096A", textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)", lineHeigh: "22px", fontWeight: 700 }}>
           NR Accounting & Business Advisors
         </Typography>
