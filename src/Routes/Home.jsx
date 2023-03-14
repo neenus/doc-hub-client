@@ -82,6 +82,10 @@ const Home = () => {
         setSnackbarMessage(response.data.message);
         setSnackbarSeverity('success');
         setFiles([]);
+        setUserInputData({
+          description: '',
+          userName: '',
+        });
       }
 
     } catch (err) {
@@ -103,37 +107,35 @@ const Home = () => {
 
   }, [files, error, userInputData]);
 
+  const handleDelete = useCallback(file => setFiles(files.filter(f => f.name !== file.name)), [files]);
+
   return (
     <React.Fragment>
-      <Box py={10} sx={{ textAlign: "center" }}>
+      <Box py={5} sx={{ textAlign: "center" }}>
         <SnackbarComponent open={snackbarOpen} handleClose={handleClose} message={snackbarMessage} severity={snackbarSeverity} />
-        <Typography variant="subtitle1" gutterBottom sx={{ color: "#020126" }} >
-          File upload request from:
-        </Typography>
         <Typography variant="h5" gutterBottom sx={{ color: "#0B096A", textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)", lineHeigh: "22px", fontWeight: 700 }}>
           NR Accounting & Business Advisors
         </Typography>
         <Typography variant="subtitle1" gutterBottom sx={{ color: "#020126" }} >
-          Hello! please upload files here.
+          Fill out the below fields and select files to upload.
         </Typography>
-        <TextInput label='Name' name="userName" value={userInputData.userName} handleChange={handleChange} placeholder="Enter Your name" />
-        <TextInput label='Description' name="description" autoFocus multiline rows={3} value={userInputData.description} handleChange={handleChange} placeholder="Enter brief discription of what you will be uploading" />
+        <TextInput autoComplete="off" required label='Name' name="userName" autoFocus value={userInputData.userName} handleChange={handleChange} placeholder="Enter Your name" />
+        <TextInput autoComplete="off" required label='Description' name="description" multiline rows={3} value={userInputData.description} handleChange={handleChange} placeholder="Enter brief discription of what you will be uploading" />
       </Box>
 
-      <section className="container">
+
+      <Box className="container" mb={5}>
         <div {...getRootProps({ className: 'dropzone' })}>
           <input {...getInputProps()} />
           <p>Drag 'n' drop some files here, or click to select files</p>
         </div>
-      </section>
+      </Box>
 
-      {files.length > 0 &&
-        <React.Fragment>
-          <FileList files={files} />
-          <Button disabled={files.length === 0} variant="contained" color="primary" sx={{ my: 2, mr: 2 }} onClick={handleClear}> Clear </Button>
-          <Button disabled={files.length === 0} variant="contained" color="primary" sx={{ my: 2, mr: 2 }} onClick={handleUpload}> Upload </Button>
-        </React.Fragment>
-      }
+      <Box>
+        <FileList files={files} handleDelete={handleDelete} />
+        <Button disabled={!files.length || !userInputData.userName || !userInputData.description} variant="contained" color="primary" sx={{ my: 2, mr: 2 }} onClick={handleClear}> Clear </Button>
+        <Button disabled={!files.length || !userInputData.userName || !userInputData.description} variant="contained" color="primary" sx={{ my: 2, mr: 2 }} onClick={handleUpload}> Upload </Button>
+      </Box>
 
       {loading &&
         <Backdrop
