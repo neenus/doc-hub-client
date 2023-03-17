@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useReducer, useRef, useState } from 'react'
 import { Box } from '@mui/system'
 import { Typography, Button, Backdrop } from '@mui/material'
 import TextInput from '../components/Input/Input.component'
@@ -9,19 +9,30 @@ import axios from 'axios'
 import { useDropzone } from 'react-dropzone';
 
 const Home = () => {
+  const reducer = (state, action) => {
+    const { error, message, severity } = action.payload;
+    switch (action.type) {
+      case 'error':
+        return { ...state, error, snackbarMessage: message, snackbarSeverity: severity };
+      case 'success':
+        return { ...state, error, snackbarMessage: message, snackbarSeverity: severity };
+      default:
+        return state;
+    }
+  }
+  const initialState = { error: "", message: "", snackbarMessage: '', snackbarSeverity: 'success' }
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+
   const [userInputData, setUserInputData] = useState({
     description: '',
     userName: '',
   });
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const controller = useRef(new AbortController());
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-
+  const controller = useRef(new AbortController());
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: acceptedFiles => {
@@ -78,9 +89,15 @@ const Home = () => {
       });
 
       if (response.status === 200) {
+        dispatch({
+          type: 'success',
+          payload: {
+            error: '',
+            message: response.data.message,
+            severity: 'success'
+          }
+        });
         setSnackbarOpen(true);
-        setSnackbarMessage(response.data.message);
-        setSnackbarSeverity('success');
         setFiles([]);
         setUserInputData({
           description: '',
@@ -90,29 +107,41 @@ const Home = () => {
 
     } catch (err) {
       if (axios.isCancel(err)) {
+        dispatch({
+          type: 'error',
+          payload: {
+            error: "Upload Cancelled",
+            message: "Upload Cancelled",
+            severity: 'info'
+          }
+        });
         setSnackbarOpen(true);
-        setSnackbarMessage('Upload cancelled');
-        setSnackbarSeverity('info');
         setUploadProgress(0);
+        controller.current = new AbortController(); // reset controller to new instance on cancel
       } else {
-        setError({ error: true, message: err.response.data.message })
+        dispatch({
+          type: 'error',
+          payload: {
+            error: err.response.data.error,
+            message: err.response.data.message,
+            severity: 'error'
+          }
+        });
         setSnackbarOpen(true);
-        setSnackbarMessage(error.message);
-        setSnackbarSeverity('error');
       }
     } finally {
       setLoading(false);
       setUploadProgress(0);
     }
 
-  }, [files, error, userInputData]);
+  }, [files, userInputData]);
 
   const handleDelete = useCallback(file => setFiles(files.filter(f => f.name !== file.name)), [files]);
 
   return (
     <React.Fragment>
       <Box py={5} sx={{ textAlign: "center" }}>
-        <SnackbarComponent open={snackbarOpen} handleClose={handleClose} message={snackbarMessage} severity={snackbarSeverity} />
+        <SnackbarComponent open={snackbarOpen} handleClose={handleClose} message={state.snackbarMessage} severity={state.snackbarSeverity} />
         <Typography variant="h5" gutterBottom sx={{ color: "#0B096A", textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)", lineHeigh: "22px", fontWeight: 700 }}>
           NR Accounting & Business Advisors
         </Typography>
