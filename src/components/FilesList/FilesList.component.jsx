@@ -1,21 +1,38 @@
 import React from 'react'
-import File from '../File/File.component'
-import { Divider, List, ListSubheader } from '@mui/material'
+import { getFileIconSrc } from '../../utils/getFileIconSrc'
+import { convertFileSize } from '../../utils/convertFileSize'
+import { TableContainer, Table, TableBody, TableRow, TableCell, Paper, IconButton } from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete';
 
-const FilesList = ({ files }) => {
+const FilesList = ({ files, handleDelete }) => {
 
   return (
-    <List spacing={1}
-      sx={{ width: '100%', bgcolor: 'background.paper' }}
-    >
-      <ListSubheader>Files Selected to upload</ListSubheader>
-      {files.map((file, index) => (
-        <React.Fragment key={index}>
-          <File key={index} file={file} />
-          <Divider />
-        </React.Fragment>
-      ))}
-    </List>
+    <React.Fragment>
+      <TableContainer component={Paper}>
+        <Table size="small" aria-label="a dense table">
+          <TableBody>
+            {files.map((file, index) => (
+              <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 }, rowGap: "1em" }}>
+                <TableCell>
+                  <img height={30} src={getFileIconSrc(file)} alt={file.name} />
+                </TableCell>
+                <TableCell>
+                  {file.name}
+                </TableCell>
+                <TableCell>
+                  {convertFileSize(file.size)}
+                </TableCell>
+                <TableCell>
+                  <IconButton aria-label="delete" size="small" onClick={() => handleDelete(file)}>
+                    <DeleteIcon color="warning" />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </React.Fragment>
   )
 }
 

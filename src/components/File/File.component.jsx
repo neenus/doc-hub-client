@@ -1,5 +1,5 @@
 import React from 'react'
-import { ListItem, ListItemText, Typography } from '@mui/material'
+import { ListItem, ListItemText } from '@mui/material'
 
 const File = ({ file, index }) => {
   const convertFileSize = size => {
@@ -17,11 +17,7 @@ const File = ({ file, index }) => {
   return (
     <ListItem key={index} >
       <ListItemText
-        primary={`File Info: ${file.file.name} - ${convertFileSize(file.file.size)}`}
-        secondary={
-          <Typography>
-            Description: {file.file.description}
-          </Typography>} />
+        primary={`${file.name} - ${convertFileSize(file.size)}`} />
     </ListItem>
   )
 }
