@@ -1,18 +1,17 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import useApi from '../hooks/useApi';
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import useApi from "../hooks/useApi.ts";
 import { useNavigate } from "react-router-dom";
 
 const theme = createTheme();
@@ -20,10 +19,9 @@ const theme = createTheme();
 export default function SignIn() {
   const navigate = useNavigate();
 
-  const { data, loading, error, API_REQUEST } = useApi();
+  const { data, isLoading, error, API_REQUEST } = useApi();
 
-
-  if (loading) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
@@ -31,30 +29,32 @@ export default function SignIn() {
     return <div>Error!</div>;
   }
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
 
     const body = {
-      email: formData.get('email'),
-      password: formData.get('password'),
+      email: formData.get("email"),
+      password: formData.get("password")
     };
 
     const url = `${import.meta.env.VITE_API_BASE_URL}/auth/login`;
-    const successCb = response => {
-      navigate('/');
-    }
-    const errorCb = error => console.log('error in errorCb in Signin', error);
+    const successCb = () => {
+      navigate("/");
+    };
+    const errorCb = (error: string) =>
+      console.log("error in errorCb in Signin", error);
 
-    API_REQUEST({
-      method: 'POST',
-      url,
-      requestConfig: {
-        data: body
-      }
-    },
+    API_REQUEST(
+      {
+        method: "POST",
+        url,
+        requestConfig: {
+          data: body
+        }
+      },
       successCb,
-      errorCb,
+      errorCb
     );
   };
 
@@ -65,18 +65,23 @@ export default function SignIn() {
         <Box
           sx={{
             marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center"
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
             <TextField
               margin="normal"
               required
