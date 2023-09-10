@@ -1,5 +1,6 @@
 import React, { useCallback, useReducer, useRef, useState } from 'react'
 import { Box } from '@mui/system'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Typography, Button, Backdrop } from '@mui/material'
 import TextInput from '../components/Input/Input.component'
 import FileList from '../components/FilesList/FilesList.component'
@@ -51,9 +52,7 @@ const Home = () => {
   }
   const handleChange = e => setUserInputData({ ...userInputData, [e.target.name]: e.target.value });
 
-  const handleClear = useCallback(() => {
-    setFiles([]);
-  }, []);
+  const handleClear = useCallback(() => setFiles([]), []);
 
   const uploadCancelCb = useCallback(() => {
     controller.current.abort();
@@ -123,7 +122,7 @@ const Home = () => {
           type: 'error',
           payload: {
             error: err.response.data.error,
-            message: err.response.data.message,
+            message: err.response.data.error,
             severity: 'error'
           }
         });
@@ -156,7 +155,10 @@ const Home = () => {
       <Box className="container" mb={5}>
         <div {...getRootProps({ className: 'dropzone' })}>
           <input {...getInputProps()} />
-          <p>Drag 'n' drop some files here, or click to select files</p>
+          <CloudUploadIcon sx={{ fontSize: 50, color: "#020126" }} />
+          <Typography variant="subtitle1" gutterBottom sx={{ color: "#020126" }} >
+            Drag and drop files here or click to select files
+          </Typography>
         </div>
       </Box>
 
