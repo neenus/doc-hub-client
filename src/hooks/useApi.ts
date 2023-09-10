@@ -14,10 +14,10 @@ const axiosInstance = axios.create({
 });
 
 const useApi = () => {
-  const [data, setData] = useState([]);
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [controller, setController] = useState(null);
+  const [data, setData] = useState<[] | null>(null);
+  const [error, setError] = useState<string | ''>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [controller, setController] = useState<AbortController | null>(null);
 
 
   // API_REQUEST is a function that takes in a config object, a success callback, and an error callback
@@ -27,7 +27,18 @@ const useApi = () => {
   // requestConfig: an object that contains the data and params properties
   // data: the data to send in the request body
   // params: the query parameters to send
-  const API_REQUEST = async (config, successCb, errorCb) => {
+  const API_REQUEST = async (
+    config: {
+      method: string,
+      url: string,
+      requestConfig?: {
+        data?: any,
+        params?: any,
+      },
+    },
+    successCb: (data: any) => void,
+    errorCb: (error: any) => void,
+  ) => {
     const {
       method,
       url,
@@ -52,21 +63,18 @@ const useApi = () => {
       // If there is a success callback, call it with the data
       // success callback is used in components that need to react to the data returned from the API
       successCb && successCb(res.data.data);
-    } catch (error) {
+    } catch (error: any | unknown) {
       setError(error);
       errorCb && errorCb(error);
     } finally {
       setIsLoading(false);
     }
-
   }
-
 
   useEffect(() => {
 
-
     // cleanup function to cancel any pending requests when the component unmounts
-    return () => controller && controller.abort();
+    return () => controller?.abort();
   }, [controller]);
 
   return { data, error, isLoading, API_REQUEST };
