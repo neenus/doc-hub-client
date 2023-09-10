@@ -72,7 +72,7 @@ const Home = () => {
     try {
       const response = await axios({
         method: 'POST',
-        url: `${process.env.REACT_APP_API_BASE_URL}/upload`,
+        url: `${import.meta.env.VITE_API_BASE_URL}/upload`,
         data: formData,
         headers: {
           'Content-Type': 'multipart/form-data',

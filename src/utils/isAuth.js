@@ -6,7 +6,7 @@ export const isAuth = async () => {
   try {
     const res = await axios({
       method: 'GET',
-      url: `${process.env.REACT_APP_API_BASE_URL}/auth/me`,
+      url: `${import.meta.env.VITE_API_BASE_URL}/auth/me`,
       withCredentials: true,
     });
     isAuthenticated = res.data.success;
