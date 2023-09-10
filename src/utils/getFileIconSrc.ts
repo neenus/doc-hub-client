@@ -1,4 +1,4 @@
-export const getFileIconSrc = file => {
+export const getFileIconSrc = (file: File) => {
   const fileExtension = file.name.split('.').pop();
   switch (fileExtension) {
     case 'pdf':
@@ -36,4 +36,8 @@ export const getFileIconSrc = file => {
     default:
       return "/icons/file.png";
   }
-}
+};
+
+type File = {
+  name: string;
+};

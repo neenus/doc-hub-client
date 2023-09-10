@@ -1,4 +1,4 @@
-export const convertFileSize = size => {
+export const convertFileSize = (size: number) => {
   if (size < 1024) {
     return size + " bytes";
   } else if (size < 1048576) {
