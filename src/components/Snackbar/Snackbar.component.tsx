@@ -37,7 +37,10 @@ SnackbarComponent.propTypes = {
 
 type SnackbarProps = {
   open: boolean;
-  handleClose: () => void;
+  handleClose: (
+    event: Event | React.SyntheticEvent<Element, Event>,
+    reason?: string | undefined
+  ) => void;
   message: string;
   severity: "success" | "info" | "warning" | "error";
 };

@@ -22,8 +22,16 @@ TextInput.propTypes = {
 };
 
 type TextInputProps = {
+  name: string;
+  value: string;
+  placeholder: string;
   label: string;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  autoComplete?: string;
+  required?: boolean;
+  autoFocus?: boolean;
+  multiline?: boolean;
+  rows?: number;
 };
 
 export default TextInput;
