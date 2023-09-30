@@ -11,16 +11,16 @@ const baseUrl =
     import.meta.env.VITE_API_BASE_URL_DEV;
 
 const login = async (user: credentials) => {
-  const response = await axios.post(`${baseUrl}/login`, user);
+  const response = await axios.post(`${baseUrl}/auth/login`, user);
   return response.data.data;
 }
 
 const me = async () => {
-  const response = await axios.get(`${baseUrl}/me`);
+  const response = await axios.get(`${baseUrl}/auth/me`);
   return response.data.data;
 }
 
-const logout = () => axios.get(`${baseUrl}/logout`);
+const logout = async () => await axios.get(`${baseUrl}/auth/logout`);
 
 const authService = {
   login,
