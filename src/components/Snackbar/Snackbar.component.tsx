@@ -1,6 +1,6 @@
-import React from "react";
+import React, { SyntheticEvent } from "react";
 import PropTypes from "prop-types";
-import { Snackbar } from "@mui/material";
+import { Snackbar, SnackbarCloseReason } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 import { AlertProps } from "@mui/material/Alert/Alert";
 
@@ -21,9 +21,7 @@ const SnackbarComponent = ({
       onClose={handleClose}
       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
     >
-      <Alert severity={severity} onClose={handleClose}>
-        {message}
-      </Alert>
+      <Alert severity={severity}>{message}</Alert>
     </Snackbar>
   );
 };
@@ -38,8 +36,8 @@ SnackbarComponent.propTypes = {
 type SnackbarProps = {
   open: boolean;
   handleClose: (
-    event: Event | React.SyntheticEvent<Element, Event>,
-    reason?: string | undefined
+    _event: Event | SyntheticEvent<any, Event>,
+    reason: SnackbarCloseReason
   ) => void;
   message: string;
   severity: "success" | "info" | "warning" | "error";

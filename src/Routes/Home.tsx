@@ -1,7 +1,12 @@
 import React, { useCallback, useReducer, useRef, useState } from "react";
 import { Box } from "@mui/system";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { Typography, Button, Backdrop } from "@mui/material";
+import {
+  Typography,
+  Button,
+  Backdrop,
+  SnackbarCloseReason
+} from "@mui/material";
 import TextInput from "../components/Input/Input.component";
 import FileList from "../components/FilesList/FilesList.component";
 import CircularProgressWithLabel from "../components/CircularProgressWithLabel/CircularProgressWithLabel.component";
@@ -52,17 +57,14 @@ const Home = () => {
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: acceptedFiles => {
-      setFiles(
-        [...files, ...acceptedFiles].map(file =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file)
-          })
-        )
-      );
+      setFiles([...files, ...acceptedFiles].map(file => Object.assign(file)));
     }
   });
 
-  const handleClose = (event: React.MouseEvent, reason: string) => {
+  const handleClose = (
+    _event: Event | React.SyntheticEvent<any, Event>,
+    reason: SnackbarCloseReason
+  ): void => {
     if (reason === "clickaway") {
       return;
     }
@@ -90,9 +92,12 @@ const Home = () => {
       formData.append("files", file);
     });
     try {
+      const baseUrl = import.meta.env.PROD
+        ? import.meta.env.VITE_API_BASE_URL_PROD
+        : import.meta.env.VITE_API_BASE_URL_DEV;
       const response = await axios({
         method: "POST",
-        url: `${import.meta.env.VITE_API_BASE_URL}/upload`,
+        url: `${baseUrl}/upload`,
         data: formData,
         headers: {
           "Content-Type": "multipart/form-data"
@@ -259,11 +264,6 @@ const Home = () => {
       )}
     </React.Fragment>
   );
-};
-
-type File = {
-  name: string;
-  size: number;
 };
 
 export default Home;
