@@ -56,12 +56,8 @@ FilesList.propTypes = {
 };
 
 type FilesListProp = {
-  File: {
-    name: string;
-    size: number;
-  };
   files: Array<File>;
-  handleDelete: (file: { name: string; size: number }) => void;
+  handleDelete: (file: File) => void;
 };
 
 export default FilesList;

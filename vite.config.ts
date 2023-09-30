@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     host: true, // needed for the Docker Container port mapping to work
     strictPort: true,
-    open: true,
+    // open: true,
     port: 3000, // you can replace this port with any port
   },
   build: {
@@ -18,10 +18,9 @@ export default defineConfig({
           reactDom: ['react-dom'],
           reactRouter: ['react-router'],
           reactRouterDom: ['react-router-dom'],
-          reactToastify: ['react-toastify'],
-          muiCore: ['@mui/material'],
-          muiIcons: ['@mui/icons-material'],
-          muiLab: ['@mui/lab'],
+          // muiCore: ['@mui/material'],
+          // muiIcons: ['@mui/icons-material'],
+          // muiLab: ['@mui/lab'],
         },
       },
     },

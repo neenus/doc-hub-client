@@ -1,5 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { store } from "./store/store.ts";
+import { Provider } from "react-redux";
 
 import {
   createTheme,
@@ -20,10 +22,12 @@ axios.defaults.withCredentials = true;
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
-    </StyledEngineProvider>
+    <Provider store={store}>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>
+      </StyledEngineProvider>
+    </Provider>
   </React.StrictMode>
 );

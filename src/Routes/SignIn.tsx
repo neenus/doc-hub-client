@@ -11,51 +11,28 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import useApi from "../hooks/useApi.ts";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "../features/auth/authSlice.ts";
 
 const theme = createTheme();
 
 export default function SignIn() {
   const navigate = useNavigate();
-
-  const { data, isLoading, error, API_REQUEST } = useApi();
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error!</div>;
-  }
+  const dispatch = useDispatch<any>();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
 
     const body = {
-      email: formData.get("email"),
-      password: formData.get("password")
+      email: formData.get("email") as string,
+      password: formData.get("password") as string
     };
 
-    const url = `${import.meta.env.VITE_API_BASE_URL}/auth/login`;
-    const successCb = () => {
-      navigate("/");
-    };
-    const errorCb = (error: string) =>
-      console.log("error in errorCb in Signin", error);
-
-    API_REQUEST(
-      {
-        method: "POST",
-        url,
-        requestConfig: {
-          data: body
-        }
-      },
-      successCb,
-      errorCb
-    );
+    // dispatch login
+    await dispatch(login(body));
+    navigate("/");
   };
 
   return (

@@ -37,7 +37,3 @@ export const getFileIconSrc = (file: File) => {
       return "/icons/file.png";
   }
 };
-
-type File = {
-  name: string;
-};

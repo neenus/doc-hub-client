@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+const baseUrl =
+  import.meta.env.PROD ?
+    import.meta.env.VITE_API_BASE_URL_PROD :
+    import.meta.env.VITE_API_BASE_URL_DEV;
 
 const axiosInstance = axios.create({
   baseURL: baseUrl,
