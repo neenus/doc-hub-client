@@ -1,18 +1,25 @@
 import axios from 'axios';
 
-// isAuth is a function that makes a request to the /auth/me endpoint
-export const isAuth = async () => {
-  let isAuthenticated = false;
+
+export const isAuth = async (): Promise<boolean> => {
+
+  let isAuthenticated: boolean = false;
+
+  const baseURL =
+    import.meta.env.PROD ?
+      import.meta.env.VITE_API_BASE_URL_PROD :
+      import.meta.env.VITE_API_BASE_URL_DEV;
+
   try {
     const res = await axios({
       method: 'GET',
-      url: `${import.meta.env.VITE_API_BASE_URL}/auth/me`,
+      url: `${baseURL}/auth/me`,
       withCredentials: true,
-    });
-    isAuthenticated = res.data.success;
-  } catch (error) {
-    throw error;
+    })
+    isAuthenticated = res.data?.success;
+  } catch (err) {
+    console.log(err);
   } finally {
     return isAuthenticated;
   }
-}
+};
