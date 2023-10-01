@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
-import { TextField, Stack } from "@mui/material";
+import { TextField, Box } from "@mui/material";
 
 const TextInput = ({ label, handleChange, ...otherProps }: TextInputProps) => {
   return (
-    <Stack direction="column" alignItems="center" spacing={1}>
+    <Box component="form" noValidate autoComplete="off">
       <TextField
         fullWidth
         variant="outlined"
@@ -12,7 +12,7 @@ const TextInput = ({ label, handleChange, ...otherProps }: TextInputProps) => {
         {...otherProps}
         onChange={handleChange}
       />
-    </Stack>
+    </Box>
   );
 };
 
