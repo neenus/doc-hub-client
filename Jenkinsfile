@@ -16,8 +16,8 @@ pipeline {
     stage('Build docker images') {
       steps {
         sh 'echo "Building docker image..."'
-        sh 'docker build -t neenus007/doc-hub-client:${IMAGE_VERSION}.${BUILD_NUMBER} .'
-        sh 'docker build -t neenus007/doc-hub-client:latest .'
+        sh 'docker build -t neenus007/doc-hub-client:${IMAGE_VERSION}.${BUILD_NUMBER} -f Dockerfile.prod .'
+        sh 'docker build -t neenus007/doc-hub-client:latest -f Dockerfile.prod .'
       }
     }
     stage('Login to DockerHub') {
