@@ -92,7 +92,7 @@ const Home = () => {
       formData.append("files", file);
     });
     try {
-      const baseUrl = import.meta.env.MODE = "production"
+      const baseUrl = import.meta.env.PROD
         ? import.meta.env.VITE_API_BASE_URL_PROD
         : import.meta.env.VITE_API_BASE_URL_DEV;
       const response = await axios({
