@@ -6,7 +6,7 @@ type credentials = {
 }
 
 const baseUrl =
-  import.meta.env.PROD ?
+  import.meta.env.MODE === "production" ?
     import.meta.env.VITE_API_BASE_URL_PROD :
     import.meta.env.VITE_API_BASE_URL_DEV;
 
