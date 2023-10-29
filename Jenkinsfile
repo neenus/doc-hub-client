@@ -5,6 +5,12 @@ pipeline {
     IMAGE_VERSION='1.0'
   }
   stages {
+    stage('Clean Workspace') {
+      steps {
+        sh 'echo "Cleaning workspace..."'
+        deleteDir() // This will remove the workspace if it exists
+      }
+    }
     stage('Cloning our Git') {
       steps {
         sh 'echo "Cloning repository..."'
