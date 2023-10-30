@@ -2,6 +2,7 @@ pipeline {
   agent any
   environment {
     DOCKERHUB_CREDENTIALS=credentials('dockerhub-token')
+    ENV_FILE = credentials('DOC_HUB_ENV')
     IMAGE_VERSION='1.0'
   }
   stages {
@@ -12,6 +13,14 @@ pipeline {
           sh 'git clone git@github.com:neenus/doc-hub-client.git'
         }
       }
+    }
+    stage("Copy ENV file") {
+        steps {
+            sh 'echo "copy env file for production build into workspace"'
+            withCredentials([file(credentialsId: 'DOC_HUB_ENV', variable: 'ENV_FILE')]) {
+                sh 'cp $ENV_FILE .env.production.local'
+            }
+        }
     }
     stage('Build docker images') {
       steps {
