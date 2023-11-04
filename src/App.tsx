@@ -17,6 +17,7 @@ import { isAuth } from "./utils/isAuth";
 import { me } from "./features/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
+import { ToastContainer } from "react-toastify";
 
 const router = createBrowserRouter([
   {
@@ -71,6 +72,7 @@ function App() {
 
   return (
     <React.Fragment>
+      <ToastContainer />
       <Box
         sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
       >

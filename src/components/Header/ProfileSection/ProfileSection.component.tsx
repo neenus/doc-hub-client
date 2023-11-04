@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { logout } from "../../../features/auth/authSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import { useNavigate } from "react-router-dom";
+import useToast from "../../../hooks/useToast";
 
 interface ProfileButtonProps {
   user: any;
@@ -12,6 +13,7 @@ interface ProfileButtonProps {
 
 const ProfileButton: React.FC<ProfileButtonProps> = ({ user }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const notify = useToast();
 
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
@@ -21,9 +23,16 @@ const ProfileButton: React.FC<ProfileButtonProps> = ({ user }) => {
       dispatch(logout());
     } catch (error) {
       console.log({ error });
-      // TODO: Handle error
+      notify({
+        message: "Something went wrong",
+        type: "error"
+      });
     } finally {
       navigate("/login");
+      notify({
+        message: "Logged out successfully",
+        type: "success"
+      });
     }
   };
 
