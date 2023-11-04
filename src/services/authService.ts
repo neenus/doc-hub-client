@@ -20,7 +20,10 @@ const me = async () => {
   return response.data.data;
 }
 
-const logout = async () => await axios.get(`${baseUrl}/auth/logout`);
+const logout = async () => {
+  const response = await axios.get(`${baseUrl}/auth/logout`);
+  return response.data.data;
+}
 
 const authService = {
   login,
