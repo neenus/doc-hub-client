@@ -14,12 +14,14 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../features/auth/authSlice.ts";
+import useToast from "../hooks/useToast.ts";
 
 const theme = createTheme();
 
 export default function SignIn() {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
+  const notify = useToast();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -30,9 +32,29 @@ export default function SignIn() {
       password: formData.get("password") as string
     };
 
-    // dispatch login
-    await dispatch(login(body));
-    navigate("/");
+    if (!body.email || !body.password) {
+      notify({
+        message: "Please enter email and password",
+        type: "error"
+      });
+      return;
+    }
+    {
+      const response = await dispatch(login(body));
+
+      if (response.type === "auth/login/fulfilled") {
+        notify({
+          message: `Welcome ${response.payload.user.name}!`,
+          type: "success"
+        });
+        navigate("/", { replace: true });
+      } else {
+        notify({
+          message: "Invalid credentials",
+          type: "error"
+        });
+      }
+    }
   };
 
   return (
