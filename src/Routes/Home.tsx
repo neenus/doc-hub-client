@@ -1,49 +1,16 @@
-import React, { useCallback, useReducer, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { Box } from "@mui/system";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import {
-  Typography,
-  Button,
-  Backdrop,
-  SnackbarCloseReason
-} from "@mui/material";
+import { Typography, Button, Backdrop } from "@mui/material";
 import TextInput from "../components/Input/Input.component";
 import FileList from "../components/FilesList/FilesList.component";
 import CircularProgressWithLabel from "../components/CircularProgressWithLabel/CircularProgressWithLabel.component";
-import SnackbarComponent from "../components/Snackbar/Snackbar.component";
 import axios from "axios";
 import { useDropzone } from "react-dropzone";
+import useToast from "../hooks/useToast.ts";
 
 const Home = () => {
-  const reducer = (state: any, action: any) => {
-    const { error, message, severity } = action.payload;
-    switch (action.type) {
-      case "error":
-        return {
-          ...state,
-          error,
-          snackbarMessage: message,
-          snackbarSeverity: severity
-        };
-      case "success":
-        return {
-          ...state,
-          error,
-          snackbarMessage: message,
-          snackbarSeverity: severity
-        };
-      default:
-        return state;
-    }
-  };
-  const initialState = {
-    error: "",
-    message: "",
-    snackbarMessage: "",
-    snackbarSeverity: "success"
-  };
-
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const notify = useToast();
 
   const [userInputData, setUserInputData] = useState({
     description: "",
@@ -52,7 +19,6 @@ const Home = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
-  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
   const controller = useRef(new AbortController());
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -61,16 +27,6 @@ const Home = () => {
     }
   });
 
-  const handleClose = (
-    _event: Event | React.SyntheticEvent<any, Event>,
-    reason: SnackbarCloseReason
-  ): void => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setSnackbarOpen(false);
-  };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setUserInputData({ ...userInputData, [e.target.name]: e.target.value });
 
@@ -84,6 +40,12 @@ const Home = () => {
   }, []);
 
   const handleUpload = useCallback(async () => {
+    if (!files.length || !userInputData.userName || !userInputData.description)
+      return notify({
+        message:
+          "Please fill out all required fields and select files to upload",
+        type: "error"
+      });
     setLoading(true);
     const formData = new FormData();
     formData.append("userName", userInputData.userName);
@@ -117,36 +79,30 @@ const Home = () => {
       });
 
       if (response.status === 200) {
-        dispatch({
-          type: "success",
-          payload: {
-            error: "",
-            message: response.data.message,
-            severity: "success"
-          }
+        notify({
+          message: response.data.message,
+          type: "success"
         });
-        setSnackbarOpen(true);
         setFiles([]);
         setUserInputData({
           description: "",
           userName: ""
         });
       }
-    } catch (err) {
+    } catch (err: any) {
       if (axios.isCancel(err)) {
-        dispatch({
-          type: "error",
-          payload: {
-            error: "Upload Cancelled",
-            message: "Upload Cancelled",
-            severity: "info"
-          }
+        notify({
+          message: "Upload Cancelled",
+          type: "info"
         });
-        setSnackbarOpen(true);
         setUploadProgress(0);
         controller.current = new AbortController(); // reset controller to new instance on cancel
+        return;
       }
-      setSnackbarOpen(true);
+      notify({
+        message: err.message,
+        type: "error"
+      });
     } finally {
       setLoading(false);
       setUploadProgress(0);
@@ -161,12 +117,6 @@ const Home = () => {
   return (
     <React.Fragment>
       <Box py={5} sx={{ textAlign: "center" }}>
-        <SnackbarComponent
-          open={snackbarOpen}
-          handleClose={handleClose}
-          message={state.snackbarMessage}
-          severity={state.snackbarSeverity}
-        />
         <Typography
           variant="h5"
           gutterBottom

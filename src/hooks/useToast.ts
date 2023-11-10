@@ -16,10 +16,7 @@ const useToast = () => {
     theme: "colored",
   };
 
-  const notify = useCallback(({ message, type }: NotifyParams) => {
-    console.log("notify", { message, type })
-    toast[type](message, options);
-  }, [options]);
+  const notify = useCallback(({ message, type }: NotifyParams) => toast[type](message, options), [options]);
 
   return notify;
 };
