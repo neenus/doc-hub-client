@@ -1,15 +1,20 @@
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import { useState } from "react";
+import {
+  Avatar,
+  Button,
+  CssBaseline,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Link,
+  Grid,
+  Box,
+  Typography,
+  Container,
+  IconButton
+} from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -19,6 +24,7 @@ import useToast from "../hooks/useToast.ts";
 const theme = createTheme();
 
 export default function SignIn() {
+  const [fieldType, setFieldType] = useState("password");
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const notify = useToast();
@@ -97,9 +103,23 @@ export default function SignIn() {
               fullWidth
               name="password"
               label="Password"
-              type="password"
+              type={fieldType}
               id="password"
               autoComplete="current-password"
+              InputProps={{
+                endAdornment: (
+                  <IconButton
+                    aria-label="delete"
+                    onClick={() =>
+                      setFieldType(
+                        fieldType === "password" ? "text" : "password"
+                      )
+                    }
+                  >
+                    <RemoveRedEyeIcon color="primary" />
+                  </IconButton>
+                )
+              }}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
