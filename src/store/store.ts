@@ -6,5 +6,6 @@ export const store = configureStore({
     // Add the generated reducer as a specific top-level slice
     auth: authReducer,
   },
-  devTools: true
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+  devTools: import.meta.env.NODE_ENV !== 'production',
 });
