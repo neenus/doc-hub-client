@@ -48,7 +48,7 @@ export default function SignIn() {
     {
       const response = await dispatch(login(body));
 
-      if (response.type === "auth/login/fulfilled") {
+      if (response.type === "auth/login/fulfilled" && response.payload.user) {
         notify({
           message: `Welcome ${response.payload.user.name}!`,
           type: "success"
