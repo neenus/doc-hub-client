@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import { CircularProgress, Typography, Button } from "@mui/material";
 
 const CircularProgressWithLabel = ({
+  loading,
   progress,
   onCancel
 }: CircularProgressWithLabelProp) => {
@@ -59,16 +60,31 @@ const CircularProgressWithLabel = ({
       >
         Cancel
       </Button>
+
+      <Typography
+        variant="caption"
+        component="div"
+        color="inherit"
+        sx={{
+          textAlign: "center",
+          transition: "all 0.3s ease-in-out",
+          fontWeight: 700
+        }}
+      >
+        {progress == 100 && loading ? "Scanning for viruses..." : ""}
+      </Typography>
     </Box>
   );
 };
 
 CircularProgressWithLabel.propTypes = {
+  loading: PropTypes.bool.isRequired, // loading state
   progress: PropTypes.number.isRequired, // progress value in percent (0-100)
   onCancel: PropTypes.func.isRequired
 };
 
 type CircularProgressWithLabelProp = {
+  loading: boolean;
   progress: number;
   onCancel: () => void;
 };
