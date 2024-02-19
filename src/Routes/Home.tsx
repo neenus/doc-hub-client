@@ -207,6 +207,7 @@ const Home = () => {
           open={loading}
         >
           <CircularProgressWithLabel
+            loading={loading}
             progress={uploadProgress}
             onCancel={uploadCancelCb}
           />
