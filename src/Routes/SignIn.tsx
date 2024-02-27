@@ -109,7 +109,11 @@ export default function SignIn() {
               InputProps={{
                 endAdornment: (
                   <IconButton
-                    aria-label="delete"
+                    sx={{
+                      position: "absolute",
+                      right: "5px",
+                    }}
+                    aria-label="show password"
                     onClick={() =>
                       setFieldType(
                         fieldType === "password" ? "text" : "password"
