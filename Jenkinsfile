@@ -6,14 +6,6 @@ pipeline {
     IMAGE_VERSION = '1.0'
   }
   stages {
-    stage('Cloning our Git') {
-      steps {
-        sh 'echo "Cloning repository..."'
-          git branch: 'main',
-          credentialsId: 'jenkins-ssh',
-          url: 'git@github.com:neenus/doc-hub-client.git'
-      }
-    }
     stage('Copy ENV file') {
         steps {
             sh 'echo "copy env file for production build into workspace"'
