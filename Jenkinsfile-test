@@ -1,0 +1,15 @@
+pipeline {
+  agent any
+  environment {
+    DOCKERHUB_CREDENTIALS = credentials('dockerhub-token')
+    ENV_FILE = credentials('DOC_HUB_ENV')
+    IMAGE_VERSION = '1.0'
+  }
+  stages {
+    stage('Cloning our Git') {
+      steps {
+        sh 'ls -alh'
+      }
+    }
+  }
+}
