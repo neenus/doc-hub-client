@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Avatar,
   Button,
@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../features/auth/authSlice.ts";
 import useToast from "../hooks/useToast.ts";
+import { useSelector } from "react-redux";
 
 const theme = createTheme();
 
@@ -28,6 +29,7 @@ export default function SignIn() {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const notify = useToast();
+  const user = useSelector((state: any) => state.auth.user);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -62,6 +64,10 @@ export default function SignIn() {
       }
     }
   };
+
+  useEffect(() => {
+    if (user) return navigate("/", { replace: true });
+  }, [user]);
 
   return (
     <ThemeProvider theme={theme}>

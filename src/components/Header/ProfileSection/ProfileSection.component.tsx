@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import { IconButton, Menu, MenuItem, Divider } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useDispatch } from "react-redux";
 import { logout } from "../../../features/auth/authSlice";
@@ -17,6 +17,11 @@ const ProfileButton: React.FC<ProfileButtonProps> = ({ user }) => {
 
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
+
+  const handleMenuNavigation = (path: string) => {
+    navigate(path);
+    handleClose();
+  }
 
   const handleLogout = () => {
     try {
@@ -62,10 +67,13 @@ const ProfileButton: React.FC<ProfileButtonProps> = ({ user }) => {
           left: 5
         }}
       >
+        <MenuItem onClick={() => handleMenuNavigation("/")}>Home</MenuItem>
+        <Divider />
         {user.role === "admin" && (
-          <MenuItem onClick={handleClose} disabled>
-            Admin Settings (Coming Soon)
-          </MenuItem>
+          <MenuItem onClick={() => handleMenuNavigation("/admin")}>Admin Settings</MenuItem>
+        )}
+        {user.role === "user" && (
+          <MenuItem disabled onClick={() => handleMenuNavigation("/myfiles")}>Files (Feature Coming Soon)</MenuItem>
         )}
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
