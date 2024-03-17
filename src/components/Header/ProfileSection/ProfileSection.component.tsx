@@ -1,6 +1,10 @@
 import React, { useState } from "react";
-import { IconButton, Menu, MenuItem, Divider } from "@mui/material";
+import { IconButton, Menu, MenuItem, Divider, ListItemIcon, ListItemText } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import HomeIcon from '@mui/icons-material/Home';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import FolderIcon from '@mui/icons-material/Folder';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { useDispatch } from "react-redux";
 import { logout } from "../../../features/auth/authSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
@@ -66,16 +70,35 @@ const ProfileButton: React.FC<ProfileButtonProps> = ({ user }) => {
           top: 0,
           left: 5
         }}
+        sx={{ minWidth: "400px" }}
       >
-        <MenuItem onClick={() => handleMenuNavigation("/")}>Home</MenuItem>
+        <MenuItem onClick={() => handleMenuNavigation("/")}>
+          <ListItemIcon>
+            <HomeIcon color="secondary" fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Home</ListItemText>
+        </MenuItem>
         <Divider />
         {user.role === "admin" && (
-          <MenuItem onClick={() => handleMenuNavigation("/admin")}>Admin Settings</MenuItem>
+          <MenuItem onClick={() => handleMenuNavigation("/admin")}>
+            <ListItemIcon>
+              <AdminPanelSettingsIcon color="secondary" fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Admin Panel</ListItemText>
+          </MenuItem>
         )}
-        {user.role === "user" && (
-          <MenuItem onClick={() => handleMenuNavigation("/myfiles")}>Files (Feature Coming Soon)</MenuItem>
-        )}
-        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+        <MenuItem onClick={() => handleMenuNavigation("/myfiles")}>
+          <ListItemIcon>
+            <FolderIcon color="secondary" fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>My Files</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={handleLogout}>
+          <ListItemIcon>
+            <LogoutIcon color="secondary" fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Logout</ListItemText>
+        </MenuItem>
       </Menu>
     </>
   );
