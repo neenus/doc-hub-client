@@ -87,11 +87,11 @@ const ProfileButton: React.FC<ProfileButtonProps> = ({ user }) => {
             <ListItemText>Admin Panel</ListItemText>
           </MenuItem>
         )}
-        <MenuItem onClick={() => handleMenuNavigation("/myfiles")}>
+        <MenuItem disabled onClick={() => handleMenuNavigation("/myfiles")}>
           <ListItemIcon>
             <FolderIcon color="secondary" fontSize="small" />
           </ListItemIcon>
-          <ListItemText>My Files</ListItemText>
+          <ListItemText>My Files (Feature Coming Soon)</ListItemText>
         </MenuItem>
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
