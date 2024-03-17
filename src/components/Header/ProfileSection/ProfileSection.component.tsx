@@ -73,7 +73,7 @@ const ProfileButton: React.FC<ProfileButtonProps> = ({ user }) => {
           <MenuItem onClick={() => handleMenuNavigation("/admin")}>Admin Settings</MenuItem>
         )}
         {user.role === "user" && (
-          <MenuItem disabled onClick={() => handleMenuNavigation("/myfiles")}>Files (Feature Coming Soon)</MenuItem>
+          <MenuItem onClick={() => handleMenuNavigation("/myfiles")}>Files (Feature Coming Soon)</MenuItem>
         )}
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>

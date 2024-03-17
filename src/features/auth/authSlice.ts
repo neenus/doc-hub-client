@@ -7,6 +7,7 @@ type AuthState = {
   isSuccess: boolean;
   isLoading: boolean;
   message: string;
+  token?: string;
 }
 
 const initialState: AuthState = {
@@ -87,6 +88,7 @@ export const authSlice = createSlice({
         state.user = action.payload.user;
         state.isError = false;
         state.message = '';
+        state.token = action.payload.token;
       })
       .addCase(login.rejected, (state) => {
         state.isLoading = false;
@@ -94,6 +96,7 @@ export const authSlice = createSlice({
         state.isError = true;
         state.user = null;
         state.message = "Something went wrong"; // TODO: Add error message returned from api
+        state.token = '';
       })
       .addCase(me.pending, state => {
         state.isLoading = true;
@@ -104,6 +107,7 @@ export const authSlice = createSlice({
         state.user = action.payload.user;
         state.isError = false;
         state.message = '';
+        state.token = action.payload.token;
       })
       .addCase(me.rejected, (state) => {
         state.isLoading = false;
@@ -111,6 +115,7 @@ export const authSlice = createSlice({
         state.isError = true;
         state.user = null;
         state.message = "Something went wrong"; // TODO: Add error message returned from api
+        state.token = '';
       })
       .addCase(logout.pending, state => {
         state.isLoading = true;
@@ -121,6 +126,7 @@ export const authSlice = createSlice({
         state.user = null;
         state.isError = false;
         state.message = '';
+        state.token = '';
       })
       .addCase(logout.rejected, (state) => {
         state.isLoading = false;
@@ -128,6 +134,7 @@ export const authSlice = createSlice({
         state.isError = true;
         state.user = null;
         state.message = "Something went wrong"; // TODO: Add error message returned from api
+        state.token = '';
       })
   }
 });
