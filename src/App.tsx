@@ -10,6 +10,7 @@ const About = lazy(() => import("./Routes/About"));
 const ErrorPage = lazy(() => import("./Routes/Error/Error"));
 const Login = lazy(() => import("./Routes/SignIn"));
 const Admin = lazy(() => import("./Routes/Admin"));
+const MyFiles = lazy(() => import("./Routes/MyFiles"));
 import Loader from "./components/Loader/Loader.component";
 import Footer from "./components/Footer/Footer.component";
 import Layout from "./components/Layout";
@@ -89,6 +90,25 @@ const router = createBrowserRouter([
         caseSensitive: false
       },
       {
+        element: <MyFiles />,
+        path: "myfiles",
+        caseSensitive: false,
+        loader: async () => {
+          try {
+            if (!(await isAuth())) {
+              return redirect("/login");
+            }
+            return null;
+          } catch (error) {
+            toast.error(
+              "Server error. Please try again later or contact support",
+              options
+            );
+            throw redirect("/login");
+          }
+        }
+      },
+      {
         element: <ErrorPage />,
         path: "*",
         caseSensitive: false
@@ -116,7 +136,7 @@ function App() {
       <Box
         sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
       >
-        <Container maxWidth="md" sx={{ flex: 1 }}>
+        <Container maxWidth="lg" sx={{ flex: 1 }}>
           <RouterProvider router={router} />
         </Container>
         <Footer />
