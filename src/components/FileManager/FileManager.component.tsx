@@ -5,12 +5,10 @@ import {
   DetailsView,
   Inject
 } from "@syncfusion/ej2-react-filemanager";
-import { registerLicense } from "@syncfusion/ej2-base";
 import "./fileManager.styles.css";
 import { useSelector } from "react-redux";
 
 const FileManager = () => {
-  registerLicense(import.meta.env.VITE_SYNCFUSION_LICENSE_KEY);
   const token = useSelector((state: any) => state.auth.token);
   const user = useSelector((state: any) => state.auth.user);
 

@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { store } from "./store/store.ts";
 import { Provider } from "react-redux";
+import { registerLicense } from "@syncfusion/ej2-base";
 
 import {
   createTheme,
@@ -19,6 +20,9 @@ const theme = createTheme({
 });
 
 axios.defaults.withCredentials = true;
+
+// Register Syncfusion license
+registerLicense(import.meta.env.VITE_SYNCFUSION_LICENSE_KEY);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
