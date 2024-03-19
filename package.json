@@ -8,7 +8,7 @@
     "@mui/icons-material": "^5.10.9",
     "@mui/material": "^5.10.9",
     "@reduxjs/toolkit": "^1.9.5",
-    "@syncfusion/ej2-react-filemanager": "~24.2.7",
+    "@syncfusion/ej2-react-filemanager": "^25.1.35",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
