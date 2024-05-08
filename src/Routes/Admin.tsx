@@ -16,9 +16,7 @@ const Admin = () => {
   const users = useSelector((state: any) => state.users.users);
   const navigate = useNavigate();
 
-  const handleAddUser = () => {
-    console.log("Add user")
-  }
+  const handleAddUser = () => navigate("/admin/add-user");
 
   const handleNavigation = (path: string, user: User) => {
     navigate(path, { state: user });
