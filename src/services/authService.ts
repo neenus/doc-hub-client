@@ -25,10 +25,16 @@ const logout = async () => {
   return response.data.data;
 }
 
+const register = async (user: credentials) => {
+  const response = await axios.post(`${baseUrl}/auth/register`, user);
+  return response.data.data;
+}
+
 const authService = {
   login,
   logout,
-  me
+  me,
+  register
 };
 
 export default authService;

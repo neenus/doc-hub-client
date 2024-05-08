@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import authService from "../../services/authService";
+import { User } from '../../types';
 
 type AuthState = {
   user: User | null;
@@ -60,6 +61,22 @@ export const me = createAsyncThunk("auth/me", async (_, thunkAPI) => {
 export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
   try {
     return await authService.logout();
+  } catch (error: any) {
+    const message = (error.response?.data?.message || error.message || error.toString()) as string;
+    return thunkAPI.rejectWithValue({ message });
+  }
+});
+
+// Register User
+/**
+ * 
+ * @param user The user parameter is an object with the name, email, and password properties.
+ * @param thunkAPI An object that provides access to the Redux store and other utilities for creating thunks.
+ * @returns A promise that resolves to the result of the `authService.register` function or rejects with an error message.
+ */
+export const register = createAsyncThunk("auth/register", async (user: { name: string, email: string, password: string }, thunkAPI) => {
+  try {
+    return await authService.register(user);
   } catch (error: any) {
     const message = (error.response?.data?.message || error.message || error.toString()) as string;
     return thunkAPI.rejectWithValue({ message });
@@ -136,6 +153,21 @@ export const authSlice = createSlice({
         state.message = "Something went wrong"; // TODO: Add error message returned from api
         state.token = '';
       })
+      .addCase(register.pending, state => {
+        state.isLoading = true;
+      })
+      .addCase(register.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.message = '';
+      })
+      .addCase(register.rejected, (state) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
+        state.message = "Something went wrong"; // TODO: Add error message returned from api
+      });
   }
 });
 
