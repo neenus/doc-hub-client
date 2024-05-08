@@ -7,6 +7,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers } from "../features/users/userSlice";
+import { User } from "../types";
 
 const Admin = () => {
 
@@ -19,6 +20,10 @@ const Admin = () => {
     console.log("Add user")
   }
 
+  const handleNavigation = (path: string, user: User) => {
+    navigate(path, { state: user });
+  }
+
 
   useEffect(() => {
     if (auth.user?.role !== "admin") {
@@ -29,14 +34,14 @@ const Admin = () => {
 
   return (
     <>
-      <TableContainer component={Paper} sx={{marginTop: "1rem", marginBottom: "1rem"}}>
+      <TableContainer component={Paper} sx={{ marginTop: "1rem", marginBottom: "1rem" }}>
         <Table>
           <TableHead sx={{
             "& .MuiTableCell-root": {
               fontWeight: "bold",
               textAlign: "center"
             }
-            }} 
+          }}
             color="primary"
           >
             <TableRow>
@@ -53,10 +58,13 @@ const Admin = () => {
             "& .MuiTableCell-root": {
               textAlign: "center"
             }
-          
+
           }}>
             {users.map((user: any) => (
-              <TableRow key={user._id}>
+              <TableRow
+                key={user._id}
+                onClick={() => handleNavigation(`/myfiles`, user)}
+              >
                 {/* <TableCell>
                   <Checkbox />
                 </TableCell> */}
@@ -64,21 +72,21 @@ const Admin = () => {
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.role}</TableCell>
                 <TableCell>
-                  <IconButton  sx={{
+                  <IconButton sx={{
                     cursor: "not-allowed"
                   }}>
                     <EditIcon color="primary" />
-                    </IconButton>
+                  </IconButton>
                   <IconButton>
                     <DeleteIcon color="error" />
                   </IconButton>
                 </TableCell>
               </TableRow>
             ))}
-          </TableBody>  
+          </TableBody>
         </Table>
       </TableContainer>
-      <Fab color="primary" aria-label="add" sx={{position: "fixed", bottom: "2rem", right: "2rem"}} onClick={handleAddUser}>
+      <Fab color="primary" aria-label="add" sx={{ position: "fixed", bottom: "2rem", right: "2rem" }} onClick={handleAddUser}>
         <AddIcon />
       </Fab>
     </>

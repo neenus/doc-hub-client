@@ -1,10 +1,14 @@
 import FileManager from '../components/FileManager/FileManager.component';
 import { Typography, Box } from '@mui/material';
 import AlertDialog from '../components/AlertDialog/AlertDialog.component';
+import { useLocation } from "react-router-dom";
 
 const MyFiles = () => {
   const title = "File Manager feature is in beta mode"
   const message = "This feature is still in beta mode and may not work as expected. Please use with caution."
+
+  // access data provided with the useNavigate hook
+  const { state } = useLocation();
 
   return (
     <>
@@ -23,7 +27,7 @@ const MyFiles = () => {
           NR Accounting & Business Advisors
         </Typography>
       </Box>
-      <FileManager />
+      <FileManager userInfo={state} />
     </>
   )
 }
