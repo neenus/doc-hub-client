@@ -74,7 +74,7 @@ export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
  * @param thunkAPI An object that provides access to the Redux store and other utilities for creating thunks.
  * @returns A promise that resolves to the result of the `authService.register` function or rejects with an error message.
  */
-export const register = createAsyncThunk("auth/register", async (user: { name: string, email: string, password: string }, thunkAPI) => {
+export const register = createAsyncThunk("auth/register", async (user: { name: string, email: string, role: string }, thunkAPI) => {
   try {
     return await authService.register(user);
   } catch (error: any) {
