@@ -11,7 +11,6 @@ const RegisterUser: React.FC = () => {
   const notify = useToast();
   const initialValues = { name: "", email: "", role: "" };
   const handleSubmit = async (values: { name: string, email: string, role: string }) => {
-    console.log("Submitting new user:", values);
 
     const response = await dispatch(register(values) as any)
 
