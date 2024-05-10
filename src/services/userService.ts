@@ -16,9 +16,15 @@ const updateUser = async (user: User) => {
   return response.data.data;
 }
 
+const deleteUser = async (id: string) => {
+  const response = await axios.delete(`${baseUrl}/users/${id}`);
+  return response.data.data;
+}
+
 const userService = {
   getUsers,
-  updateUser
+  updateUser,
+  deleteUser
 };
 
 export default userService;
