@@ -7,10 +7,11 @@ import {
 } from "@syncfusion/ej2-react-filemanager";
 import "./fileManager.styles.css";
 import { useSelector } from "react-redux";
+import { User } from "../../types";
 
-const FileManager = () => {
+const FileManager = ({ userInfo }: { userInfo: User }) => {
   const token = useSelector((state: any) => state.auth.token);
-  const user = useSelector((state: any) => state.auth.user);
+  const user = userInfo?._id ? userInfo : useSelector((state: any) => state.auth.user);
 
   const hostUrl = import.meta.env.MODE === "production"
     ? import.meta.env.VITE_API_BASE_URL_PROD + "/filemanager"
@@ -43,8 +44,6 @@ const FileManager = () => {
     visible: true,
     items: ['NewFolder', 'Upload', 'SortBy', 'Refresh', 'View', 'Details', 'Cut', 'Copy', 'Delete', 'Paste', 'Download', 'Rename']
   };
-
-
 
   return (
     <>
