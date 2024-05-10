@@ -8,9 +8,12 @@ import {
   DialogContentText,
   DialogTitle
 } from "@mui/material";
+import { useSelector } from "react-redux";
+import { selectAuth } from "../../features/auth/authSlice";
 
 const AlertDialog = ({ title, message }: { title: string, message: string }) => {
-  const [open, setOpen] = useState(false);
+  const auth = useSelector(selectAuth);
+  const [open, setOpen] = useState<boolean>(auth.user?.role === "admin" ? false : true);
   const handleClose = () => setOpen(false);
 
   return (
@@ -31,7 +34,7 @@ const AlertDialog = ({ title, message }: { title: string, message: string }) => 
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>
+          <Button onClick={handleClose} variant="contained">
             Ok
           </Button>
         </DialogActions>
