@@ -1,4 +1,5 @@
 import axios from "axios";
+import { User } from "../types";
 
 const baseUrl =
   import.meta.env.MODE === "production" ?
@@ -10,8 +11,14 @@ const getUsers = async () => {
   return response.data.data;
 }
 
+const updateUser = async (user: User) => {
+  const response = await axios.put(`${baseUrl}/users/${user._id}`, user);
+  return response.data.data;
+}
+
 const userService = {
-  getUsers
+  getUsers,
+  updateUser
 };
 
 export default userService;
