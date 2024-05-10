@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { selectAuth } from "../features/auth/authSlice";
 import { Box, Typography, IconButton, Fab } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
@@ -7,14 +7,54 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getUsers } from "../features/users/userSlice";
+import { getUsers, deleteUser } from "../features/users/userSlice";
+import useToast from "../hooks/useToast";
+import ConfirmationModal from "../components/ConfirmationModal/ConfirmationModal";
+import { User } from "../types";
 
-const Admin = () => {
+const Admin: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [userToDelete, setUserToDelete] = useState<User | null>(null);
+
 
   const auth = useSelector(selectAuth);
   const dispatch = useDispatch<any>();
   const users = useSelector((state: any) => state.users.users);
   const navigate = useNavigate();
+  const notify = useToast();
+
+  const handleDeleteUser = async (user: User) => {
+    setUserToDelete(user);
+    setIsModalOpen(true);
+  }
+
+  const handleDeleteConfirm = async () => {
+
+    if (!userToDelete) return notify({ message: "Error deleting user", type: "error" }); // Check if userToDelete is null
+
+    const response = await dispatch(deleteUser(userToDelete._id));
+
+    if (response.meta.requestStatus === "fulfilled") {
+      setIsModalOpen(false);
+      setUserToDelete(null);
+
+      notify({
+        message: "User deleted successfully",
+        type: "success"
+      });
+    } else {
+      notify({
+        message: response.error?.message || "Error deleting user",
+        type: "error"
+      });
+    }
+  }
+
+  const handleCloseModal = () => {
+    // Close modal without deletion
+    setIsModalOpen(false);
+    setUserToDelete(null);
+  };
 
   const columns = [
     { field: "name", headerName: "Name", flex: 1 },
@@ -29,7 +69,7 @@ const Admin = () => {
           })}>
             <EditIcon />
           </IconButton>
-          <IconButton color="warning" onClick={() => console.log("Delete User: ", params.row)}>
+          <IconButton color="warning" onClick={() => handleDeleteUser(params.row)}>
             <DeleteIcon />
           </IconButton>
         </>
@@ -93,6 +133,12 @@ const Admin = () => {
       <Fab color="primary" aria-label="add" sx={{ position: "fixed", bottom: "2rem", right: "2rem" }} onClick={handleAddUser}>
         <AddIcon />
       </Fab>
+      <ConfirmationModal
+        open={isModalOpen}
+        user={userToDelete as User}
+        handleClose={handleCloseModal}
+        handleConfirm={handleDeleteConfirm}
+      />
     </>
   );
 };
