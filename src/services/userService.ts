@@ -7,7 +7,14 @@ const baseUrl =
     import.meta.env.VITE_API_BASE_URL_DEV;
 
 const getUsers = async () => {
-  const response = await axios.get(`${baseUrl}/users`);
+  const query = {
+    limit: 500,
+    page: 1,
+    sort: "createdAt",
+    order: "asc"
+  }
+
+  const response = await axios.get(`${baseUrl}/users`, { params: query });
   return response.data.data;
 }
 
