@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { selectAuth } from "../features/auth/authSlice";
-import { Box, Typography, IconButton, Fab } from "@mui/material";
+import { Box, Typography, IconButton, Fab, Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -60,7 +60,16 @@ const Admin: React.FC = () => {
     { field: "name", headerName: "Name", flex: 1 },
     { field: "email", headerName: "Email", flex: 1 },
     { field: "role", headerName: "Role", flex: 1 },
-    { field: "dir", headerName: "User Directory", flex: 1 },
+    {
+      field: "dir", headerName: "User Directory", flex: 1, renderCell: (params: any) => (
+        <Button
+          color="secondary"
+          onClick={() => handleNavigation("/myfiles", params.row)}
+        >
+          {params.value}
+        </Button>
+      )
+    },
     {
       field: "actions", headerName: "Actions", renderCell: (params: any) => (
         <>
@@ -79,6 +88,8 @@ const Admin: React.FC = () => {
 
   const handleAddUser = () => navigate("/admin/add-user");
 
+  const handleNavigation = (path: string, user: User) => navigate(path, { state: user });
+
   useEffect(() => {
     if (auth.user?.role !== "admin") navigate("/", { replace: true });
     dispatch(getUsers());
@@ -87,7 +98,7 @@ const Admin: React.FC = () => {
   return (
     <>
       <Box>
-        <Box py={5} sx={{ textAlign: "center" }}>
+        <Box py={3} sx={{ textAlign: "center" }}>
           <Typography
             variant="h5"
             gutterBottom
@@ -103,9 +114,10 @@ const Admin: React.FC = () => {
         </Box>
         <Box sx={{
           "& .MuiDataGrid-root": {
-            height: "60vh",
+            height: "65vh",
             width: "100%",
             backgroundColor: "#fff",
+            marginBottom: "1rem",
           },
           "& .MuiDataGrid-columnHeader": {
             backgroundColor: "#f4f4f4",
