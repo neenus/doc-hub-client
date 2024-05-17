@@ -11,7 +11,7 @@ const ErrorPage = lazy(() => import("./Routes/Error/Error"));
 const AddUser = lazy(() => import("./Routes/Admin/AddUser"));
 const EditUser = lazy(() => import("./Routes/Admin/EditUser"));
 const Login = lazy(() => import("./Routes/SignIn"));
-const Admin = lazy(() => import("./Routes/Admin"));
+const Admin = lazy(() => import("./Routes/Admin/Admin"));
 const MyFiles = lazy(() => import("./Routes/MyFiles"));
 import Loader from "./components/Loader/Loader.component";
 import Footer from "./components/Footer/Footer.component";

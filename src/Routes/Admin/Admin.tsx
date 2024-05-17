@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { selectAuth } from "../features/auth/authSlice";
+import { selectAuth } from "../../features/auth/authSlice";
 import { Box, Typography, IconButton, Fab, Button } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getUsers, deleteUser } from "../features/users/userSlice";
-import useToast from "../hooks/useToast";
-import ConfirmationModal from "../components/ConfirmationModal/ConfirmationModal";
-import { User } from "../types";
+import { getUsers, deleteUser } from "../../features/users/userSlice";
+import useToast from "../../hooks/useToast";
+import ConfirmationModal from "../../components/ConfirmationModal/ConfirmationModal";
+import { User } from "../../types";
 
 const Admin: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -139,6 +139,7 @@ const Admin: React.FC = () => {
             columns={columns}
             getRowId={(row) => row._id}
             pageSizeOptions={[5, 10, 25, 50]}
+            slots={{ toolbar: GridToolbar }}
           />
         </Box>
       </Box>
