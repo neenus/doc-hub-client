@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { Box } from "@mui/system";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Typography, Button, Backdrop } from "@mui/material";
@@ -8,13 +8,9 @@ import CircularProgressWithLabel from "../components/CircularProgressWithLabel/C
 import axios from "axios";
 import { useDropzone } from "react-dropzone";
 import useToast from "../hooks/useToast.ts";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const notify = useToast();
-  const user = useSelector((state: any) => state.auth.user);
-  const navigate = useNavigate();
 
   const [userInputData, setUserInputData] = useState({
     description: "",
@@ -117,10 +113,6 @@ const Home = () => {
     (file: File) => setFiles(files.filter(f => f.name !== file.name)),
     [files]
   );
-
-  useEffect(() => {
-    if (!user) return navigate("/login", { replace: true });
-  }, [files]);
 
   return (
     <React.Fragment>
