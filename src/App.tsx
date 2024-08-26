@@ -3,7 +3,6 @@ import "./App.css";
 import {
   createBrowserRouter,
   RouterProvider,
-  redirect
 } from "react-router-dom";
 const Home = lazy(() => import("./Routes/Home"));
 const About = lazy(() => import("./Routes/About"));
@@ -18,25 +17,13 @@ import Footer from "./components/Footer/Footer.component";
 import Layout from "./components/Layout";
 import { Container } from "@mui/material";
 import { Box } from "@mui/system";
-import { isAuth } from "./utils/isAuth";
 import { me } from "./features/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import { ToastContainer } from "react-toastify";
 import { selectAuth } from "./features/auth/authSlice";
-import { ToastOptions, toast } from "react-toastify";
-
-const options: ToastOptions = {
-  position: "bottom-right",
-  autoClose: 6000,
-  hideProgressBar: false,
-  closeOnClick: true,
-  rtl: false,
-  pauseOnFocusLoss: true,
-  draggable: true,
-  pauseOnHover: true,
-  theme: "colored"
-};
+import AdminRoute from "./components/PrivateRoutes/AdminRoute";
+import ProtectedRoute from "./components/PrivateRoutes/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -44,42 +31,22 @@ const router = createBrowserRouter([
     path: "/",
     children: [
       {
-        element: <Home />,
         path: "/",
         caseSensitive: false,
-        loader: async () => {
-          try {
-            if (!(await isAuth())) {
-              return redirect("/login");
-            }
-            return null;
-          } catch (error) {
-            toast.error(
-              "Server error. Please try again later or contact support",
-              options
-            );
-            throw redirect("/login");
-          }
-        }
+        element: (
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        )
       },
       {
-        element: <Admin />,
         path: "/admin",
         caseSensitive: false,
-        loader: async () => {
-          try {
-            if (!(await isAuth())) {
-              return redirect("/login");
-            }
-            return null;
-          } catch (error) {
-            toast.error(
-              "Server error. Please try again later or contact support",
-              options
-            );
-            throw redirect("/login");
-          }
-        }
+        element: (
+          <AdminRoute>
+            <Admin />
+          </AdminRoute>
+        )
       },
       {
         element: <Login />,
@@ -92,61 +59,31 @@ const router = createBrowserRouter([
         caseSensitive: false
       },
       {
-        element: <MyFiles />,
         path: "myfiles",
         caseSensitive: false,
-        loader: async () => {
-          try {
-            if (!(await isAuth())) {
-              return redirect("/login");
-            }
-            return null;
-          } catch (error) {
-            toast.error(
-              "Server error. Please try again later or contact support",
-              options
-            );
-            throw redirect("/login");
-          }
-        }
+        element: (
+          <ProtectedRoute>
+            <MyFiles />
+          </ProtectedRoute>
+        )
       },
       {
-        element: <AddUser />,
         path: "/admin/add-user",
         caseSensitive: false,
-        loader: async () => {
-          try {
-            if (!(await isAuth())) {
-              return redirect("/login");
-            }
-            return null;
-          } catch (error) {
-            toast.error(
-              "Server error. Please try again later or contact support",
-              options
-            );
-            throw redirect("/login");
-          }
-        }
+        element: (
+          <AdminRoute>
+            <AddUser />
+          </AdminRoute>
+        )
       },
       {
-        element: <EditUser />,
         path: "/admin/edit-user/:id",
         caseSensitive: false,
-        loader: async () => {
-          try {
-            if (!(await isAuth())) {
-              return redirect("/login");
-            }
-            return null;
-          } catch (error) {
-            toast.error(
-              "Server error. Please try again later or contact support",
-              options
-            );
-            throw redirect("/login");
-          }
-        }
+        element: (
+          <AdminRoute>
+            <EditUser />
+          </AdminRoute>
+        )
       },
       {
         element: <ErrorPage />,

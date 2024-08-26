@@ -91,7 +91,6 @@ const Admin: React.FC = () => {
   const handleNavigation = (path: string, user: User) => navigate(path, { state: user });
 
   useEffect(() => {
-    if (auth.user?.role !== "admin") navigate("/", { replace: true });
     dispatch(getUsers());
   }, [auth]);
 
