@@ -5,6 +5,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import FolderIcon from '@mui/icons-material/Folder';
 import LogoutIcon from '@mui/icons-material/Logout';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import { useDispatch } from "react-redux";
 import { logout } from "../../../features/auth/authSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
@@ -80,12 +81,20 @@ const ProfileButton: React.FC<ProfileButtonProps> = ({ user }) => {
         </MenuItem>
         <Divider />
         {user.role === "admin" && (
-          <MenuItem onClick={() => handleMenuNavigation("/admin")}>
-            <ListItemIcon>
-              <AdminPanelSettingsIcon color="secondary" fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>Admin Panel</ListItemText>
-          </MenuItem>
+          <div>
+            <MenuItem onClick={() => handleMenuNavigation("/admin")}>
+              <ListItemIcon>
+                <AdminPanelSettingsIcon color="secondary" fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Admin Panel</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={() => handleMenuNavigation("/admin/tasks")}>
+              <ListItemIcon>
+                <AssignmentIcon color="secondary" fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Tasks</ListItemText>
+            </MenuItem>
+          </div>
         )}
         <MenuItem onClick={() => handleMenuNavigation("/myfiles")}>
           <ListItemIcon>

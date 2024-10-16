@@ -12,6 +12,7 @@ const EditUser = lazy(() => import("./Routes/Admin/EditUser"));
 const Login = lazy(() => import("./Routes/SignIn"));
 const Admin = lazy(() => import("./Routes/Admin/Admin"));
 const MyFiles = lazy(() => import("./Routes/MyFiles"));
+const Tasks = lazy(() => import("./Routes/Admin/Tasks"));
 import Loader from "./components/Loader/Loader.component";
 import Footer from "./components/Footer/Footer.component";
 import Layout from "./components/Layout";
@@ -82,6 +83,15 @@ const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <EditUser />
+          </AdminRoute>
+        )
+      },
+      {
+        path: "/admin/tasks",
+        caseSensitive: false,
+        element: (
+          <AdminRoute>
+            <Tasks />
           </AdminRoute>
         )
       },
