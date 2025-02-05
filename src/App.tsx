@@ -24,6 +24,7 @@ import { ToastContainer } from "react-toastify";
 import { selectAuth } from "./features/auth/authSlice";
 import AdminRoute from "./components/PrivateRoutes/AdminRoute";
 import ProtectedRoute from "./components/PrivateRoutes/ProtectedRoute";
+import SecureLink from "./Routes/SecureLink";
 
 const router = createBrowserRouter([
   {
@@ -83,6 +84,13 @@ const router = createBrowserRouter([
           <AdminRoute>
             <EditUser />
           </AdminRoute>
+        )
+      },
+      {
+        path: "/:key",
+        caseSensitive: false,
+        element: (
+          <SecureLink />
         )
       },
       {
