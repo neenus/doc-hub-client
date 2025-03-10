@@ -62,7 +62,7 @@ const Tasks = () => {
     { field: "description", headerName: "Description", flex: 2 },
     { field: "completed", headerName: "Completed" },
     { field: "createdBy", headerName: "Created By", flex: 1, valueGetter: (params: any) => params?.name || "Not Assigned" },
-    { field: "assignedTo", headerName: "Assigned To", flex: 2, editable: true, type: "singleSelect", valueOptions: users.filter((user: any) => user.role !== "customer").map((user: any) => user.name) },
+    { field: "assignedTo", headerName: "Assigned To", flex: 1, type: "singleSelect", valueGetter: (params: any) => params?.name || "Not Assigned", valueOptions: users.map((user: any) => user.name) },
     { field: "dueDate", headerName: "Due Date", flex: 1, renderCell: (params: any) => new Date(params.value).toLocaleDateString("en-US") },
     { field: "frequency", headerName: "Frequency", flex: 1, editable: true, type: "singleSelect", valueOptions: ["Once", "Daily", "Weekly", "Monthly", "Quarterly", "Yearly"] },
     {
