@@ -30,7 +30,7 @@ const SecureLink = () => {
     try {
       const response = await axios({
         method: "POST",
-        url: `${baseUrl}/key/request-code`,
+        url: `${baseUrl}/keys/request-code`,
         data: { key },
         headers: {
           "Content-Type": "application/json"
@@ -61,7 +61,7 @@ const SecureLink = () => {
     try {
       const response = await axios({
         method: "POST",
-        url: `${baseUrl}/key/verify`,
+        url: `${baseUrl}/keys/verify`,
         data: { key, otp },
         headers: {
           "Content-Type": "application/json"
