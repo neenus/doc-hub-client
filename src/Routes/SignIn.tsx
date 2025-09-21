@@ -17,19 +17,20 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { login } from "../features/auth/authSlice.ts";
 import useToast from "../hooks/useToast.ts";
-import { useSelector } from "react-redux";
+import { useAppSelector, useAppDispatch } from "../store/hooks.ts";
+import { useLocation } from "react-router-dom";
 
 const theme = createTheme();
 
 export default function SignIn() {
   const [fieldType, setFieldType] = useState("password");
   const navigate = useNavigate();
-  const dispatch = useDispatch<any>();
+  const dispatch = useAppDispatch();
   const notify = useToast();
-  const user = useSelector((state: any) => state.auth.user);
+  const { user, loading, error } = useAppSelector((state: any) => state.auth);
+  const location = useLocation();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -65,9 +66,23 @@ export default function SignIn() {
     }
   };
 
+  const from = location.state?.from?.pathname || "/";
+
   useEffect(() => {
-    if (user) return navigate("/", { replace: true });
-  }, [user]);
+    if (user) return navigate(from, { replace: true });
+  }, [user, navigate, from]);
+
+  // Show loading while checking authentication state
+  if (user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+          <p className="text-gray-600">Redirecting...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -93,6 +108,11 @@ export default function SignIn() {
             noValidate
             sx={{ mt: 1 }}
           >
+            {error && (
+              <Typography color="error" variant="body2" sx={{ mb: 2 }}>
+                {error}
+              </Typography>
+            )}
             <TextField
               margin="normal"
               required
@@ -141,7 +161,7 @@ export default function SignIn() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              {loading ? "Signing in..." : "Sign In"}
             </Button>
             {/* <Grid container>
               <Grid item xs>

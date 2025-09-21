@@ -8,12 +8,11 @@ import {
   DialogContentText,
   DialogTitle
 } from "@mui/material";
-import { useSelector } from "react-redux";
-import { selectAuth } from "../../features/auth/authSlice";
+import { useAppSelector } from "../../store/hooks.ts";
 
 const AlertDialog = ({ title, message }: { title: string, message: string }) => {
-  const auth = useSelector(selectAuth);
-  const [open, setOpen] = useState<boolean>(auth.user?.role === "admin" ? false : true);
+  const { user } = useAppSelector((state: any) => state.auth);
+  const [open, setOpen] = useState<boolean>(user?.role === "admin" ? false : true);
   const handleClose = () => setOpen(false);
 
   return (

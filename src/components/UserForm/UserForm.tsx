@@ -3,8 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { TextField, Button, MenuItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { selectAuth } from "../../features/auth/authSlice";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../store/hooks.ts";
 
 interface user {
   name: string;
@@ -20,7 +19,7 @@ interface Props {
 
 const UserForm: React.FC<Props> = ({ initialValues, onSubmit, onCancel }) => {
   const navigate = useNavigate();
-  const auth = useSelector(selectAuth);
+  const { user, loading, error } = useAppSelector((state: any) => state.auth.user);
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
@@ -28,8 +27,8 @@ const UserForm: React.FC<Props> = ({ initialValues, onSubmit, onCancel }) => {
   });
 
   useEffect(() => {
-    if (auth.user?.role !== "admin") navigate("/", { replace: true });
-  }, [auth]);
+    if (user?.role !== "admin") navigate("/", { replace: true });
+  }, [user]);
 
   return (
     <Formik
@@ -42,6 +41,7 @@ const UserForm: React.FC<Props> = ({ initialValues, onSubmit, onCancel }) => {
     >
       {({ isSubmitting }) => (
         <Form>
+          {error && <div style={{ color: "red" }}>{error}</div>}
           <Field
             as={TextField}
             variant="outlined"
@@ -86,7 +86,7 @@ const UserForm: React.FC<Props> = ({ initialValues, onSubmit, onCancel }) => {
             disabled={isSubmitting}
             sx={{ marginTop: "1rem" }}
           >
-            Submit
+            {loading ? "Saving..." : "Save"}
           </Button>
           <Button
             variant="contained"

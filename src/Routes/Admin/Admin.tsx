@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { selectAuth } from "../../features/auth/authSlice";
 import { Box, Typography, IconButton, Fab, Button } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
@@ -16,8 +15,6 @@ const Admin: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
 
-
-  const auth = useSelector(selectAuth);
   const dispatch = useDispatch<any>();
   const users = useSelector((state: any) => state.users.users);
   const navigate = useNavigate();
@@ -92,7 +89,7 @@ const Admin: React.FC = () => {
 
   useEffect(() => {
     dispatch(getUsers());
-  }, [auth]);
+  }, [dispatch]);
 
   return (
     <>
