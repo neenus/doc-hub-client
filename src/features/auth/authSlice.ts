@@ -1,21 +1,21 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit"
 import authService from "../../services/authService";
 import { User } from '../../types';
 
 type AuthState = {
   user: User | null;
-  isError: boolean;
-  isSuccess: boolean;
-  isLoading: boolean;
+  loading: boolean;
+  error: string | null;
+  isInitialized: boolean;
   message: string;
   token?: string;
 }
 
 const initialState: AuthState = {
   user: null,
-  isError: false,
-  isSuccess: false,
-  isLoading: false,
+  loading: false,
+  error: null,
+  isInitialized: false,
   message: '',
 };
 
@@ -87,90 +87,97 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    resetState: state => {
-      state.isError = false;
-      state.isSuccess = false;
-      state.isLoading = false;
-      state.message = '';
-    }
+    clearError: (state) => {
+      state.error = null;
+    },
+    clear: (state) => {
+      state.user = null;
+    },
+    setUser: (state, action: PayloadAction<User | null>) => {
+      state.user = action.payload;
+      state.isInitialized = true;
+    },
+    initializeAuth: (state) => {
+      state.isInitialized = true;
+    },
   },
   extraReducers: builder => {
     builder
       .addCase(login.pending, state => {
-        state.isLoading = true;
+        state.loading = true;
+        state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
+        state.loading = false;
         state.user = action.payload.user;
-        state.isError = false;
+        state.error = null;
         state.message = '';
         state.token = action.payload.token;
+        state.isInitialized = true;
       })
-      .addCase(login.rejected, (state) => {
-        state.isLoading = false;
-        state.isSuccess = false;
-        state.isError = true;
+      .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string || "Something went wrong"; // TODO: Add error message returned from api
         state.user = null;
         state.message = "Something went wrong"; // TODO: Add error message returned from api
         state.token = '';
+        state.isInitialized = true;
       })
       .addCase(me.pending, state => {
-        state.isLoading = true;
+        state.loading = true;
       })
       .addCase(me.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
+        state.loading = false;
         state.user = action.payload.user;
-        state.isError = false;
+        state.error = null
         state.message = '';
         state.token = action.payload.token;
+        state.isInitialized = true;
       })
-      .addCase(me.rejected, (state) => {
-        state.isLoading = false;
-        state.isSuccess = false;
-        state.isError = true;
+      .addCase(me.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string || "Something went wrong"; // TODO: Add error message returned from api
         state.user = null;
         state.message = "Something went wrong"; // TODO: Add error message returned from api
         state.token = '';
+        state.isInitialized = true;
       })
       .addCase(logout.pending, state => {
-        state.isLoading = true;
+        state.loading = true;
       })
       .addCase(logout.fulfilled, (state) => {
-        state.isLoading = false;
-        state.isSuccess = true;
+        state.loading = false;
         state.user = null;
-        state.isError = false;
+        state.error = null;
         state.message = '';
         state.token = '';
+        state.isInitialized = true;
       })
-      .addCase(logout.rejected, (state) => {
-        state.isLoading = false;
-        state.isSuccess = false;
-        state.isError = true;
+      .addCase(logout.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string || "Something went wrong"; // TODO: Add error message returned from api
         state.user = null;
         state.message = "Something went wrong"; // TODO: Add error message returned from api
         state.token = '';
+        state.isInitialized = true;
       })
       .addCase(register.pending, state => {
-        state.isLoading = true;
+        state.loading = true;
       })
       .addCase(register.fulfilled, (state) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.isError = false;
+        state.loading = false;
+        state.error = null;
         state.message = '';
+        state.isInitialized = true;
       })
-      .addCase(register.rejected, (state) => {
-        state.isLoading = false;
-        state.isSuccess = false;
-        state.isError = true;
+      .addCase(register.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string || "Something went wrong"; // TODO: Add error message returned from api
         state.message = "Something went wrong"; // TODO: Add error message returned from api
+        state.isInitialized = true;
       });
   }
 });
 
-export const selectAuth = (state: { auth: AuthState }) => state.auth;
-export const { resetState } = authSlice.actions;
+export const { clearError, setUser, initializeAuth } = authSlice.actions;
 export default authSlice.reducer;

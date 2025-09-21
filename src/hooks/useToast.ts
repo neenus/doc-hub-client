@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 import { ToastOptions, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const useToast = () => {
 
