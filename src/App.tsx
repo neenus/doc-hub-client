@@ -3,7 +3,7 @@ import { PersistGate } from "redux-persist/integration/react"
 
 import "./App.css";
 import {
-  BrowserRouter as Router, Routes, Route, Navigate
+  BrowserRouter as Router, Routes, Route
 } from "react-router-dom";
 import Home from "./Routes/Home";
 import About from "./Routes/About";
