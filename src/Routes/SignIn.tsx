@@ -29,7 +29,7 @@ export default function SignIn() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const notify = useToast();
-  const { user, loading, error } = useAppSelector((state: any) => state.auth);
+  const { user, loading } = useAppSelector((state: any) => state.auth);
   const location = useLocation();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
