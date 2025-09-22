@@ -28,10 +28,16 @@ const deleteUser = async (id: string) => {
   return response.data.data;
 }
 
+const resetPassword = async (id: string) => {
+  const response = await axios.post(`${baseUrl}/users/${id}/reset-password`);
+  return response.data.data;
+}
+
 const userService = {
   getUsers,
   updateUser,
-  deleteUser
+  deleteUser,
+  resetPassword
 };
 
 export default userService;
