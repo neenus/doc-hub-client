@@ -108,11 +108,6 @@ export default function SignIn() {
             noValidate
             sx={{ mt: 1 }}
           >
-            {error && (
-              <Typography color="error" variant="body2" sx={{ mb: 2 }}>
-                {error}
-              </Typography>
-            )}
             <TextField
               margin="normal"
               required
