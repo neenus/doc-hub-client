@@ -4,25 +4,35 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from '@mui/icons-material/Add';
+import LockResetIcon from '@mui/icons-material/LockReset';
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getUsers, deleteUser } from "../../features/users/userSlice";
+import { getUsers, deleteUser, resetPassword } from "../../features/users/userSlice";
 import useToast from "../../hooks/useToast";
-import ConfirmationModal from "../../components/ConfirmationModal/ConfirmationModal";
+import DeleteConfirmationModal from "../../components/ConfirmationModal/DeleteConfirmationModal";
+import PswResetConfirmation from "../../components/ConfirmationModal/PwsResetConfirmationModal";
 import { User } from "../../types";
 
 const Admin: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [isResetModalOpen, setIsResetModalOpen] = useState<boolean>(false);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
+  const [userToReset, setUserToReset] = useState<User | null>(null);
 
   const dispatch = useDispatch<any>();
   const users = useSelector((state: any) => state.users.users);
+  const isResetting = useSelector((state: any) => state.users.isLoading);
   const navigate = useNavigate();
   const notify = useToast();
 
   const handleDeleteUser = async (user: User) => {
     setUserToDelete(user);
-    setIsModalOpen(true);
+    setIsDeleteModalOpen(true);
+  }
+
+  const handleResetPassword = async (user: User) => {
+    setUserToReset(user);
+    setIsResetModalOpen(true);
   }
 
   const handleDeleteConfirm = async () => {
@@ -32,7 +42,7 @@ const Admin: React.FC = () => {
     const response = await dispatch(deleteUser(userToDelete._id));
 
     if (response.meta.requestStatus === "fulfilled") {
-      setIsModalOpen(false);
+      setIsDeleteModalOpen(false);
       setUserToDelete(null);
 
       notify({
@@ -47,11 +57,36 @@ const Admin: React.FC = () => {
     }
   }
 
-  const handleCloseModal = () => {
+  const handlePwsResetConfirm = async () => {
+
+    if (!userToReset) return notify({ message: "Error resetting password", type: "error" }); // Check if userToReset is null
+    const response = await dispatch(resetPassword(userToReset._id));
+    if (response.meta.requestStatus !== "fulfilled") {
+      notify({
+        message: response.error?.message || "Error resetting password",
+        type: "error"
+      });
+    } else {
+      notify({
+        message: "Password reset successfully. New password sent to user's email.",
+        type: "success"
+      });
+    }
+    setIsResetModalOpen(false);
+    setUserToReset(null);
+  }
+
+  const handleCloseDeleteModal = () => {
     // Close modal without deletion
-    setIsModalOpen(false);
+    setIsDeleteModalOpen(false);
     setUserToDelete(null);
   };
+
+  const handleCloseResetModal = () => {
+    // Close modal without password reset
+    setIsResetModalOpen(false);
+    setUserToReset(null);
+  }
 
   const columns = [
     { field: "name", headerName: "Name", flex: 1 },
@@ -68,7 +103,7 @@ const Admin: React.FC = () => {
       )
     },
     {
-      field: "actions", headerName: "Actions", renderCell: (params: any) => (
+      field: "actions", headerName: "Actions", flex: 1, renderCell: (params: any) => (
         <>
           <IconButton color="primary" onClick={() => navigate(`/admin/edit-user/${params.row._id}`, {
             state: params.row
@@ -77,6 +112,9 @@ const Admin: React.FC = () => {
           </IconButton>
           <IconButton color="warning" onClick={() => handleDeleteUser(params.row)}>
             <DeleteIcon />
+          </IconButton>
+          <IconButton color="info" onClick={() => handleResetPassword(params.row)}>
+            <LockResetIcon />
           </IconButton>
         </>
       )
@@ -142,11 +180,18 @@ const Admin: React.FC = () => {
       <Fab color="primary" aria-label="add" sx={{ position: "fixed", bottom: "2rem", right: "2rem" }} onClick={handleAddUser}>
         <AddIcon />
       </Fab>
-      <ConfirmationModal
-        open={isModalOpen}
+      <DeleteConfirmationModal
+        open={isDeleteModalOpen}
         user={userToDelete as User}
-        handleClose={handleCloseModal}
+        handleClose={handleCloseDeleteModal}
         handleConfirm={handleDeleteConfirm}
+      />
+      <PswResetConfirmation
+        open={isResetModalOpen}
+        user={userToReset as User}
+        handleClose={handleCloseResetModal}
+        handleConfirm={handlePwsResetConfirm}
+        loading={isResetting}
       />
     </>
   );
