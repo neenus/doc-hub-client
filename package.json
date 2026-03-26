@@ -62,7 +62,7 @@
     "cz-conventional-changelog": "3.3.0",
     "eslint": "^8.49.0",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.3",
+    "eslint-plugin-react-refresh": "^0.5.2",
     "typescript": "^5.2.2",
     "vite": "^7.1.11",
     "vite-plugin-svgr": "^4.5.0",
