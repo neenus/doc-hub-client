@@ -9,7 +9,7 @@
     "@mui/material": "^7.3.9",
     "@mui/x-data-grid": "^8.0.0",
     "@reduxjs/toolkit": "^2.6.1",
-    "@syncfusion/ej2-react-filemanager": "^25.1.35",
+    "@syncfusion/ej2-react-filemanager": "^33.1.47",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^13.5.0",
